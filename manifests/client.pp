@@ -32,7 +32,8 @@ class ipa::client (
   $fixedprimary  = false,
   $desc          = {},
   $locality      = {},
-  $location      = {}
+  $location      = {},
+  $ip            = {}
 ) {
 
   Ipa::Clientinstall <<| |>> {
@@ -133,7 +134,8 @@ class ipa::client (
     clientos => $::lsbdistdescription,
     clientpf => $::manufacturer,
     locality => $ipa::client::locality,
-    location => $ipa::client::location
+    location => $ipa::client::location,
+    ip       => $ipa::client::ip
   }
 
   if $ipa::client::loadbalance {

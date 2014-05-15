@@ -5,7 +5,8 @@ define ipa::hostadd (
   $clientos = {},
   $clientpf = {},
   $locality = {},
-  $location = {}
+  $location = {},
+  $ip       = {},
 ) {
 
   $timestamp = strftime("%a %b %d %Y %r")
@@ -13,7 +14,7 @@ define ipa::hostadd (
 
   if $::ipa_adminhomedir and is_numeric($::ipa_adminuidnumber) {
     exec { "hostadd-${host}":
-      command   => "/sbin/runuser -l admin -c \'/usr/bin/ipa host-add ${host} --locality=\"${locality}\" --location=\"${location}\" --desc=\"${descinfo}\" --platform=\"${clientpf}\" --os=\"${clientos}\" --password=${otp}\'",
+      command   => "/sbin/runuser -l admin -c \'/usr/bin/ipa host-add ${host} --ip-address=\"${ip}\" -locality=\"${locality}\" --location=\"${location}\" --desc=\"${descinfo}\" --platform=\"${clientpf}\" --os=\"${clientos}\" --password=${otp}\'",
       unless    => "/sbin/runuser -l admin -c \'/usr/bin/ipa host-show ${host} >/dev/null 2>&1\'",
       tries     => '60',
       try_sleep => '60'

@@ -184,13 +184,14 @@ class ipa::master (
     adminpw    => $ipa::master::adminpw,
     otp        => '',
     mkhomedir  => '',
-    ntp        => ''
+    ntp        => '',
+    ip         => $::ipaddress
   }
 
   if $ipa::master::sudo {
     @@ipa::configsudo { $::fqdn:
       masterfqdn => $::fqdn,
-      domain     => $ipa::master::domain,
+      domain     => $ipa::master::realm,
       adminpw    => $ipa::master::adminpw,
       sudopw     => $ipa::master::sudopw
     }
@@ -200,14 +201,14 @@ class ipa::master (
     @@ipa::configautomount { $::fqdn:
       masterfqdn => $::fqdn,
       os         => $::osfamily,
-      domain     => $ipa::master::domain,
+      domain     => $ipa::master::realm,
       realm      => $ipa::master::realm
     }
   }
 
   if $ipa::master::loadbalance {
     ipa::loadbalanceconf { "master-${::fqdn}":
-      domain     => $ipa::master::domain,
+      domain     => $ipa::master::realm,
       ipaservers => $ipa::master::ipaservers,
       mkhomedir  => $ipa::master::mkhomedir,
       require    => Ipa::Serverinstall[$::fqdn]

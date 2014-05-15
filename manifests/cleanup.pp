@@ -29,7 +29,7 @@ define ipa::cleanup (
                  if [ -d /var/lib/certmonger ]; then find /var/lib/certmonger -type f -exec /bin/rm -f '{}' \; ; fi ;\
                  if [ -d /var/lib/ipa ]; then /usr/bin/find /var/lib/ipa -type f -exec /bin/rm -f '{}' \; ; fi ;\
                  if [ -d /var/lib/ipa-client ]; then /usr/bin/find /var/lib/ipa-client -type f -exec /bin/rm -f '{}' \; ; fi ;\
-                 if [ -d /etc/ipa ]; then /usr/bin/find /etc/ipa -type f -exec /bin/rm -f '{}' \; ; fi\"",
+                 if [ -d /etc/ipa ]; then /usr/bin/find /etc/ipa -type f -exec /bin/rm -f '{}' \; ; fi ;\"",
     timeout   => '0',
     logoutput => true
   }
