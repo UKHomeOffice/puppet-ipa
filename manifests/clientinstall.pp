@@ -11,7 +11,7 @@ define ipa::clientinstall (
   $mkhomedir    = {},
   $ntp          = {},
   $fixedprimary = false,
-  $ip           = {}
+ # $ip           = {}
 ) {
 
   Exec["client-install-${host}"] ~> Ipa::Flushcache["client-${host}"]

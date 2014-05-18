@@ -33,7 +33,7 @@ class ipa::client (
   $desc          = {},
   $locality      = {},
   $location      = {},
-  $ip            = {}
+#  $ip            = {}
 ) {
 
   Ipa::Clientinstall <<| |>> {
