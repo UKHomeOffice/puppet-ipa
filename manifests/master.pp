@@ -191,7 +191,6 @@ class ipa::master (
     otp        => '',
     mkhomedir  => '',
     ntp        => '',
-    ip         => $::ipaddress
   }
 
   if $ipa::master::sudo {
