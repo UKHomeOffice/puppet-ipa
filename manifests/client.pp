@@ -135,7 +135,6 @@ class ipa::client (
     clientpf => $::manufacturer,
     locality => $ipa::client::locality,
     location => $ipa::client::location,
-    ip       => $ipa::client::ip
   }
 
   if $ipa::client::loadbalance {

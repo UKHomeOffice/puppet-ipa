@@ -96,6 +96,12 @@ class ipa::master (
     else {
       $forwarderopts = '--no-forwarders'
     }
+    firewall { '101 allow IPA master DNS UDP service (dns)':
+      ensure => 'present',
+      action => 'accept',
+      proto  => 'udp',
+      dport  => ['53']
+    }
     $dnsopt = '--setup-dns'
   }
   else {
