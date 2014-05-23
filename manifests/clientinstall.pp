@@ -34,7 +34,7 @@ define ipa::clientinstall (
   $dc = prefix([regsubst($domain,'(\.)',',dc=','G')],'dc=')
 
   exec { "client-install-${host}":
-    command   => "/bin/echo | ${clientinstallcmd}",
+    command   => "/bin/echo | (test -f /etc/ipa/ca.crt && rm -f /etc/ipa/ca.crt) && ${clientinstallcmd}",
     unless    => shellquote('/bin/bash','-c',"LDAPTLS_REQCERT=never /usr/bin/ldapsearch -LLL -x -H ldaps://${masterfqdn} -D uid=admin,cn=users,cn=accounts,${dc} -b ${dc} -w ${adminpw} fqdn=${host} | /bin/grep ^krbLastPwdChange"),
     timeout   => '0',
     tries     => '60',
