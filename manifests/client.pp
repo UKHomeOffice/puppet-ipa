@@ -85,7 +85,12 @@ class ipa::client (
   }
 
   if $ipa::client::sssd {
-    realize Service['sssd']
+    realize Service['sssd'] 
+    exec {'sssd':
+      onlyif      => '/usr/bin/test -f /etc/sssd/sss.conf',
+      refreshonly => true,
+      notify      => Service['sssd']
+    }
   }
 
   if $::osfamily == 'Debian' {
