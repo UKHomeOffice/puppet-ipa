@@ -1,23 +1,23 @@
-# Fact: Cfkey
+# Fact: ipa_clientinstall
 #
-# Purpose: Return the public key(s) for CFengine.
+# Purpose: Is to check to see whether ipa_client was run successfully
 #
 # Resolution:
-#   Tries each file of standard localhost.pub & cfkey.pub locations,
-#   checks if they appear to be a public key, and then join them all together.
+#   Checks to see whether sssd.conf file was installed and whether its size is 
+#   is greater than zero.
 #
 # Caveats:
-#
+#   None really apart from these checks not being comprehensize enough
 
-## Cfkey.rb
-## Facts related to cfengine
+## ipa_clientinstall.rb
+## Facts related to IPA
 ##
+SSSD_CONF='/etc/sssd/sssd.conf'
 
-Facter.add(:Cfkey) do
+Facter.add(:ipa_clientinstall) do
   setcode do
     confine  :osfamily => "RedHat"
     value = nil
-    SSSD_CONF='/etc/sssd/sssd.conf'
     if FileTest.file?(SSSD_CONF) and FileSize.file?(SSSD_CONF) > 0
       true
     else 
