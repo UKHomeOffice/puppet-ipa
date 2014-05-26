@@ -12,13 +12,12 @@
 ## ipa_clientinstall.rb
 ## Facts related to IPA
 ##
-SSSD_CONF='/etc/sssd/sssd.conf'
 
 Facter.add(:ipa_clientinstall) do
   setcode do
     confine  :osfamily => "RedHat"
-    value = nil
-    if FileTest.file?(SSSD_CONF) and File.size(SSSD_CONF) > 0
+    sssd_conf='/etc/sssd/sssd.conf'
+    if FileTest.file?(sssd_conf) and File.size(sssd_conf) > 0
       true
     else 
       false
