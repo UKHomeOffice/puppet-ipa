@@ -18,7 +18,7 @@ Facter.add(:ipa_clientinstall) do
   setcode do
     confine  :osfamily => "RedHat"
     value = nil
-    if FileTest.file?(SSSD_CONF) and FileSize.file?(SSSD_CONF) > 0
+    if FileTest.file?(SSSD_CONF) and File.size(SSSD_CONF) > 0
       true
     else 
       false
