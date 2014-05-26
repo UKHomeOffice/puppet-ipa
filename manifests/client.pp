@@ -84,8 +84,8 @@ class ipa::client (
     }
   }
 
-  if $ipa::client::sssd {
-    realize Service['sssd'] 
+  if $ipa::client::sssd and $::ipa_clientinstall {
+    realize Service['sssd']
   }
 
   if $::osfamily == 'Debian' {
