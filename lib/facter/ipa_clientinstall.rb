@@ -18,9 +18,9 @@ Facter.add(:ipa_clientinstall) do
     confine  :osfamily => "RedHat"
     sssd_conf='/etc/sssd/sssd.conf'
     if FileTest.file?(sssd_conf) and File.size(sssd_conf) > 0
-      true
+      "true"
     else 
-      false
+      "false"
     end
   end
 end
