@@ -10,6 +10,7 @@ define ipa::clientinstall (
   $otp          = {},
   $mkhomedir    = {},
   $ntp          = {},
+  $dnsupdates   = {},
   $fixedprimary = false,
 ) {
 
@@ -32,12 +33,16 @@ define ipa::clientinstall (
     default => ''
   }
 
+  $enablednsupdates = $dnsupdates ? {
+    true    => '--enable-dns-updates',
+    default => ''
+  }
   ## the plugin helps or tries to mitigate against lost of network connectivity
   #  with ipa master.  The logic here is if sssd.conf is not present then 
   #  ipa-client-install failed.  Therefore /etc/ipa/ca.crt must be removed if 
   #  ipa-client-install is to be run again
 
-    $clientinstallcmd = shellquote('/usr/sbin/ipa-client-install',"--server=${masterfqdn}","--hostname=${host}","--domain=${domain}","--realm=${realm}","--password=${otp}",$mkhomediropt,$ntpopt,$fixedprimaryopt,'--unattended')
+    $clientinstallcmd = shellquote('/usr/sbin/ipa-client-install',"--server=${masterfqdn}","--hostname=${host}","--domain=${domain}","--realm=${realm}","--password=${otp}",$enablednsupdates,$mkhomediropt,$ntpopt,$fixedprimaryopt,'--unattended')
     $dc = prefix([regsubst($domain,'(\.)',',dc=','G')],'dc=')
 
   if ! str2bool($::ipa_clientinstall) {
