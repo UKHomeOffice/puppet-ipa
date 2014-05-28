@@ -84,7 +84,7 @@ class ipa::client (
     }
   }
 
-  if $ipa::client::sssd {
+  if $ipa::client::sssd and str2bool($::ipa_clientinstall) {
     realize Service['sssd']
   }
 

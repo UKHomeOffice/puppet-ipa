@@ -87,6 +87,7 @@ class ipa (
   $loadbalance   = false,
   $ipaservers    = [],
   $mkhomedir     = false,
+  $dnsupdates    = false,
   $ntp           = false,
   $kstart        = true,
   $desc          = '',
@@ -144,13 +145,21 @@ class ipa (
     require => Package[$ipa::svrpkg]
   }
 
-  if $ipa::sssd {
+  if $ipa::sssd and $ipa::master {
     @service { 'sssd':
       ensure => 'running',
       enable => true
     }
   }
 
+  if $ipa::sssd and str2bool($::ipa_clientinstall) {
+    unless $ipa::master {
+    @service { 'sssd':
+      ensure => 'running',
+      enable => true
+    }
+    }
+  }
   if $ipa::mkhomedir and $::osfamily == 'RedHat' and $::lsbmajdistrelease == '6' {
     service { 'oddjobd':
       ensure => 'running',
@@ -274,6 +283,7 @@ class ipa (
       loadbalance  => $ipa::loadbalance,
       ipaservers   => $ipa::ipaservers,
       mkhomedir    => $ipa::mkhomedir,
+      dnsupdates   => $ipa::dnsupdates,
       domain       => downcase($ipa::domain),
       realm        => upcase($ipa::realm),
       otp          => $ipa::otp,
@@ -316,6 +326,7 @@ class ipa (
       automount     => $ipa::automount,
       autofs        => $ipa::autofs,
       mkhomedir     => $ipa::mkhomedir,
+      dnsupdates    => $ipa::dnsupdates,
       loadbalance   => $ipa::loadbalance,
       ipaservers    => $ipa::ipaservers,
       ntp           => $ipa::ntp,
