@@ -24,7 +24,7 @@ define ipa::adminconfig (
     cron { "k5start_admin":
       command => "/usr/bin/k5start -f ${::ipa_adminhomedir}/admin.keytab -U -o admin -k /tmp/krb5cc_${::ipa_adminuidnumber} > /dev/null 2>&1",
       user    => 'root',
-      minute  => "*/1",
+      minute  => "*/10",
       require => [Package["kstart"], K5login["${::ipa_adminhomedir}/.k5login"], File["$::ipa_adminhomedir"]]
     }
 
