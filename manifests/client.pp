@@ -20,6 +20,7 @@ class ipa::client (
   $client        = {},
   $domain        = {},
   $realm         = {},
+  $dnsupdate     = {},
   $sudo          = {},
   $debiansudopkg = {},
   $automount     = {},
