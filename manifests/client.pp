@@ -44,6 +44,7 @@ class ipa::client (
     mkhomedir    => $ipa::client::mkhomedir,
     ntp          => $ipa::client::ntp,
     fixedprimary => $ipa::client::fixedprimary,
+    dnsupdates   => $ipa::client::dnsupdates,
     require      => Package[$ipa::client::clntpkg]
   }
 
