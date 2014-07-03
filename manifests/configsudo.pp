@@ -7,7 +7,8 @@ define ipa::configsudo (
   $sudopw     = {},
   $adminpw    = {},
   $domain     = {},
-  $masterfqdn = {}
+  $masterfqdn = {},
+  $sssd_template = {}
 ) {
 
   Augeas["nsswitch-sudoers-${host}"] -> Exec["set-sudopw-${host}"]
@@ -19,8 +20,19 @@ define ipa::configsudo (
     changes => [
       'set database[. = "sudoers"] sudoers',
       'set database[. = "sudoers"]/service[1] files',
-      'set database[. = "sudoers"]/service[2] ldap'
+      'set database[. = "sudoers"]/service[2] sss'
     ]
+  }
+
+  @package {'libsss_sudo': ensure => 'present'}
+
+  @file {"sssd.conf-${host}":
+    ensure => 'present',
+    path   => '/etc/sssd/sssd.conf',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0600',
+    content => "template($sssd_template)",
   }
 
   if $os == 'RedHat5' {
@@ -37,6 +49,11 @@ define ipa::configsudo (
         "set sudoers_base ou=sudoers,${dc}"
       ]
     }
+  } elsif $::operatingsystem =~ /(?i:Redhat|CentOS)/ and $::lsbmajdistrelease >= 6 {
+      realize Package['libsss_sudo']
+      if $sssd_template {
+        Package['libsss_sudo'] -> File <| title == "sssd.conf-${host}" |>
+      }  
   } else {
     file { "sudo-ldap-${host}":
       path    => '/etc/sudo-ldap.conf',

@@ -34,6 +34,7 @@ class ipa::client (
   $desc          = {},
   $locality      = {},
   $location      = {},
+  $sssd_template = '' 
 #  $ip            = {}
 ) {
 
@@ -50,9 +51,10 @@ class ipa::client (
 
   if $ipa::client::sudo {
     Ipa::Configsudo <<| |>> {
-      name    => $::fqdn,
-      os      => "${::osfamily}${::lsbmajdistrelease}",
-      require => Ipa::Clientinstall[$::fqdn]
+      name          => $::fqdn,
+      os            => "${::osfamily}${::lsbmajdistrelease}",
+      require       => Ipa::Clientinstall[$::fqdn],
+      sssd_template => $ipa::client::sssd_template,
     }
   }
 
