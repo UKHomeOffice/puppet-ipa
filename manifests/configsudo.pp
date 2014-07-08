@@ -52,7 +52,7 @@ define ipa::configsudo (
   } elsif $::operatingsystem =~ /(?i:Redhat|CentOS)/ and $::lsbmajdistrelease >= 6 {
       realize Package['libsss_sudo']
       if $sssd_template {
-        Package['libsss_sudo'] -> File <| title == "sssd.conf-${host}" |>
+        Package <| title == 'libsss_sudo' |> -> File <| title == "sssd.conf-${host}" |>
       }  
   } else {
     file { "sudo-ldap-${host}":
