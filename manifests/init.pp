@@ -107,6 +107,7 @@ class ipa (
     default => 'ipa-client',
   },
   $ldaputils     = true,
+  $sssd_template = '',
   $ldaputilspkg  = $::osfamily ? {
     Debian  => 'ldap-utils',
     default => 'openldap-clients',

@@ -35,7 +35,6 @@ class ipa::client (
   $locality      = {},
   $location      = {},
   $sssd_template = '' 
-#  $ip            = {}
 ) {
 
   Ipa::Clientinstall <<| |>> {
