@@ -49,7 +49,7 @@ define ipa::configsudo (
         "set sudoers_base ou=sudoers,${dc}"
       ]
     }
-  } elsif $::operatingsystem =~ /(?i:Redhat|CentOS)/ and $::lsbmajdistrelease >= 6 {
+  } elsif $::operatingsystem =~ /(?i:Redhat|CentOS)/ and $::operatingsystemmajrelease >= 6 {
       realize Package['libsss_sudo']
       if $sssd_template {
         Package <| title == 'libsss_sudo' |> -> File <| title == "sssd.conf-${host}" |>
