@@ -37,6 +37,7 @@ class ipa::master (
   $dirsrv_pin    = {},
   $http_pin      = {},
   $subject       = {},
+  $sssd_template = {},
   $selfsign      = {}
 ) {
 
