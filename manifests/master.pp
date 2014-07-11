@@ -56,7 +56,8 @@ class ipa::master (
     Ipa::Configsudo <<| |>> {
       name    => $::fqdn,
       os      => "${::osfamily}${::lsbmajdistrelease}",
-      require => Ipa::Serverinstall[$::fqdn]
+      require => Ipa::Serverinstall[$::fqdn],
+      sssd_template => $ipa::master::sssd_template  
     }
   }
 
