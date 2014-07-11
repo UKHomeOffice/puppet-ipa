@@ -11,7 +11,7 @@ define ipa::configsudo (
   $sssd_template = {}
 ) {
 
-  Augeas["nsswitch-sudoers-${host}"] -> Exec["set-sudopw-${host}"]
+  Augeas["nsswitch-sudoers-${host}"] -> Package <| title == 'libsss_sudo' |> 
 
   $dc = prefix([regsubst($domain,'(\.)',',dc=','G')],'dc=')
 
@@ -32,7 +32,7 @@ define ipa::configsudo (
     owner  => 'root',
     group  => 'root',
     mode   => '0600',
-    content => "template($sssd_template)",
+    content => template($sssd_template),
   }
 
   if $os == 'RedHat5' {
@@ -52,6 +52,7 @@ define ipa::configsudo (
   } elsif $::operatingsystem =~ /(?i:Redhat|CentOS)/ and $::operatingsystemmajrelease >= 6 {
       realize Package['libsss_sudo']
       if $sssd_template {
+        notify {'sssd_template-${host}':}
         Package <| title == 'libsss_sudo' |> -> File <| title == "sssd.conf-${host}" |>
       }  
   } else {
@@ -64,16 +65,17 @@ define ipa::configsudo (
     }
   }
 
-  exec { "set-sudopw-${host}":
-    command   => "/bin/bash -c \"LDAPTLS_REQCERT=never /usr/bin/ldappasswd -x -H ldaps://${masterfqdn} -D uid=admin,cn=users,cn=accounts,${dc} -w ${adminpw} -s ${sudopw} uid=sudo,cn=sysaccounts,cn=etc,${dc}\"",
-    unless    => "/bin/bash -c \"LDAPTLS_REQCERT=never /usr/bin/ldapsearch -x -H ldaps://${masterfqdn} -D uid=sudo,cn=sysaccounts,cn=etc,${dc} -w ${sudopw} -b cn=sysaccounts,cn=etc,${dc} uid=sudo\"",
-    onlyif    => '/usr/sbin/ipactl status >/dev/null 2>&1',
-    logoutput => 'on_failure'
+  if $ipa::master::sudo {
+    exec { "set-sudopw-${host}":
+      command   => "/bin/bash -c \"LDAPTLS_REQCERT=never /usr/bin/ldappasswd -x -H ldaps://${masterfqdn} -D uid=admin,cn=users,cn=accounts,${dc} -w ${adminpw} -s ${sudopw} uid=sudo,cn=sysaccounts,cn=etc,${dc}\"",
+      unless    => "/bin/bash -c \"LDAPTLS_REQCERT=never /usr/bin/ldapsearch -x -H ldaps://${masterfqdn} -D uid=sudo,cn=sysaccounts,cn=etc,${dc} -w ${sudopw} -b cn=sysaccounts,cn=etc,${dc} uid=sudo\"",
+      onlyif    => '/usr/sbin/ipactl status >/dev/null 2>&1',
+      logoutput => 'on_failure'
+    }
   }
-
+  Package <| title == 'libsss_sudo' |> ->
   exec { "setupnisdomain-${host}":
     command => "/bin/nisdomainname ${domain}",
     unless  => "/usr/bin/test $(/bin/nisdomainname) = ${domain}",
-    require => Exec["set-sudopw-${host}"]
   }
 }

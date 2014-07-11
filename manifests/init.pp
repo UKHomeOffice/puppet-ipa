@@ -335,6 +335,7 @@ class ipa (
       fixedprimary  => $ipa::fixedprimary,
       desc          => $ipa::desc,
       locality      => $ipa::locality,
+      sssd_template => $ipa::sssd_template,
       location      => $ipa::location
     }
 
