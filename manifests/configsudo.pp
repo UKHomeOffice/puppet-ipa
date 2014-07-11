@@ -53,7 +53,7 @@ define ipa::configsudo (
       realize Package['libsss_sudo']
       if $sssd_template {
         notify {'sssd_template-${host}':}
-        Package <| title == 'libsss_sudo' |> -> File <| title == "sssd.conf-${host}" |>
+        Package <| title == 'libsss_sudo' |> -> File <| title == "sssd.conf-${host}" |> ~> Service['sssd']
       }  
   } else {
     file { "sudo-ldap-${host}":
