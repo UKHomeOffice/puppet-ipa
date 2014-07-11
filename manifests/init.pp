@@ -153,7 +153,7 @@ class ipa (
     }
   }
 
-  if $ipa::sssd and str2bool($::ipa_clientinstall) {
+  if $ipa::sssd  {
     unless $ipa::master {
     @service { 'sssd':
       ensure => 'running',
