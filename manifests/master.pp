@@ -198,7 +198,8 @@ class ipa::master (
       masterfqdn => $::fqdn,
       domain     => $ipa::master::realm,
       adminpw    => $ipa::master::adminpw,
-      sudopw     => $ipa::master::sudopw
+      sudopw     => $ipa::master::sudopw,
+      sssd_template => $ipa::master::sssd_template,
     }
   }
 
