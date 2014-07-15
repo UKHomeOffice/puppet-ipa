@@ -252,6 +252,7 @@ class ipa (
       dirsrv_pin    => $ipa::dirsrv_pin,
       http_pin      => $ipa::http_pin,
       subject       => $ipa::subject,
+      sssd_template => $ipa::sssd_template,
       selfsign      => $ipa::selfsign
     }
 
