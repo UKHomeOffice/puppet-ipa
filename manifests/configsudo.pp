@@ -8,7 +8,7 @@ define ipa::configsudo (
   $adminpw    = {},
   $domain     = {},
   $masterfqdn = {},
-  $sssd_template = {}
+  $sssd_template = ''
 ) {
 
   Augeas["nsswitch-sudoers-${host}"] -> Package <| title == 'libsss_sudo' |> 
