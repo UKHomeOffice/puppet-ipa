@@ -53,7 +53,7 @@ class ipa::client (
       name          => $::fqdn,
       os            => "${::osfamily}${::lsbmajdistrelease}",
       require       => Ipa::Clientinstall[$::fqdn],
-      #sssd_template => $ipa::client::sssd_template,
+      sssd_template => $ipa::client::sssd_template,
     }
   }
 

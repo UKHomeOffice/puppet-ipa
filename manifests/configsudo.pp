@@ -37,7 +37,7 @@ define ipa::configsudo (
 
   if $::operatingsystem =~ /(?i:Redhat|CentOS)/ and $::operatingsystemmajrelease >= 6 {
       realize Package['libsss_sudo']
-      if $sssd_template and strbool($::ipa_clientinstall) {
+      if $sssd_template and str2bool($::ipa_clientinstall) {
         realize Service['sssd']
         Package <| title == 'libsss_sudo' |> -> File <| title == "sssd.conf-${host}" |> ~> Service['sssd']
       }  
