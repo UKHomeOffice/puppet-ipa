@@ -6,13 +6,14 @@
 ## Facts related to IPA
 ##
 
-Facter.add(:ipa_clientinstall) do
+Facter.add("ipa_clientinstall") do
   setcode do
+    result = "false"
     confine  :osfamily => "RedHat"
-    if Facter::Util::Resolution.exec("/usr/bin/python -c 'import sys,ipapython.sysrestore; sys.exit(0 if ipapython.sysrestore.FileStore(\"/var/lib/ipa-client/sysrestore\").has_files() else 1)' > /dev/null 2>&1") 
+    install = Facter::Util::Resolution.exec("/usr/bin/python -c 'import sys,ipapython.sysrestore; sys.exit(0 if ipapython.sysrestore.FileStore(\"/var/lib/ipa-client/sysrestore > /dev/null 2>&1\").has_files() else 1)' > /dev/null 2>&1")
+    unless install.nil?
       "true"
-    else 
-      "false"
     end
+    result 
   end
 end
