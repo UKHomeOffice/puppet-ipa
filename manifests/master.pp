@@ -83,7 +83,7 @@ class ipa::master (
 
   realize Package[$ipa::master::svrpkg]
 
-  if $ipa::master::sssd {
+  if $ipa::master::sssd and str2bool($::ipa_masterinstall) {
     realize Service['sssd']
   }
 
