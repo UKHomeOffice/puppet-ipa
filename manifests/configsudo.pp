@@ -35,26 +35,11 @@ define ipa::configsudo (
     content => template($sssd_template),
   }
 
-  if $os == 'RedHat5' {
-    augeas { "sudo-ldap-rhel5-${host}":
-      context => '/files/etc/ldap.conf',
-      changes => [
-        "set binddn uid=sudo,cn=sysaccounts,cn=etc,${dc}",
-        "set bindpw ${sudopw}",
-        'set ssl start_tls',
-        'set tls_cacertfile /etc/ipa/ca.crt',
-        'set tls_checkpeer yes',
-        'set bind_timelimit 5',
-        'set timelimit 15',
-        "set sudoers_base ou=sudoers,${dc}"
-      ]
-    }
-  } elsif $::operatingsystem =~ /(?i:Redhat|CentOS)/ and $::operatingsystemmajrelease >= 6 {
+  if $::operatingsystem =~ /(?i:Redhat|CentOS)/ and $::operatingsystemmajrelease >= 6 {
       realize Package['libsss_sudo']
-      realize Service['sssd']
-      if $sssd_template {
-        #Package <| title == 'libsss_sudo' |> -> File <| title == "sssd.conf-${host}" |> ~> Service['sssd']
-        Package <| title == 'libsss_sudo' |> 
+      if $sssd_template and strbool($::ipa_clientinstall) {
+        realize Service['sssd']
+        Package <| title == 'libsss_sudo' |> -> File <| title == "sssd.conf-${host}" |> ~> Service['sssd']
       }  
   } else {
     file { "sudo-ldap-${host}":

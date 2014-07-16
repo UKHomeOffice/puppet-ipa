@@ -114,6 +114,10 @@ class ipa (
   }
 ) {
 
+  # Check if ipa-server and ipa-client has been installed
+  $ipa_clientinstall = "/usr/bin/python -c 'import sys,ipapython.sysrestore; sys.exit(0 if ipapython.sysrestore.FileStore(\"/var/lib/ipa-client/sysrestore\").has_files() else 1)'"
+  $ipa_serverinstall = "/usr/bin/python -c 'import sys,ipapython.sysrestore; sys.exit(0 if ipapython.sysrestore.FileStore(\"/var/lib/ipa/sysrestore\").has_files() else 1)'"
+
   @package { $ipa::svrpkg:
     ensure => installed
   }
