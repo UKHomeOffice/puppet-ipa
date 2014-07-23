@@ -144,27 +144,21 @@ class ipa (
     }
   }
 
-  @service { 'ipa':
-    ensure  => 'running',
-    enable  => true,
-    require => Package[$ipa::svrpkg]
+  if $ipa::master {
+    @service { 'ipa':
+      ensure  => 'running',
+      enable  => true,
+      require => Package[$ipa::svrpkg]
+    }
   }
 
-  if $ipa::sssd and $ipa::master {
+  if $ipa::sssd and ( str2bool($::ipa_clientinstall) or str2bool($::ipa_masterinstall) ) {
     @service { 'sssd':
       ensure => 'running',
       enable => true
     }
   }
 
-  if $ipa::sssd  {
-    unless $ipa::master {
-    @service { 'sssd':
-      ensure => 'running',
-      enable => true
-    }
-    }
-  }
   if $ipa::mkhomedir and $::osfamily == 'RedHat' and $::lsbmajdistrelease == '6' {
     service { 'oddjobd':
       ensure => 'running',
