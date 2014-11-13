@@ -48,14 +48,14 @@ class ipa::client (
     require      => Package[$ipa::client::clntpkg]
   }
 
-#  if $ipa::client::sudo {
-#    Ipa::Configsudo <<| |>> {
-#      name          => $::fqdn,
-#      os            => "${::osfamily}${::lsbmajdistrelease}",
-#      require       => Ipa::Clientinstall[$::fqdn],
-#      sssd_template => $ipa::client::sssd_template,
-#    }
-#  }
+  if $ipa::client::sudo {
+    Ipa::Configsudo <<| |>> {
+      name          => $::fqdn,
+      os            => "${::osfamily}${::lsbmajdistrelease}",
+      require       => Ipa::Clientinstall[$::fqdn],
+      sssd_template => $ipa::client::sssd_template,
+    }
+  }
 
   if $ipa::client::automount {
     if $ipa::client::autofs {
