@@ -35,21 +35,20 @@ define ipa::configsudo (
     content => template($sssd_template),
   }
 
-  if $::operatingsystem =~ /(?i:Redhat|CentOS)/ and $::operatingsystemmajrelease >= 6 {
-      realize Package['libsss_sudo']
-      if $sssd_template and str2bool($::ipa_clientinstall) {
-        realize Service['sssd']
-        Package <| title == 'libsss_sudo' |> -> File <| title == "sssd.conf-${host}" |> ~> Service['sssd']
-      }  
-  } else {
-    file { "sudo-ldap-${host}":
-      path    => '/etc/sudo-ldap.conf',
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0640',
-      content => template('ipa/sudo-ldap.conf.erb')
-    }
+  exec { "setupnisdomain-${host}":
+    command => "/bin/nisdomainname ${domain}",
+    unless  => "/usr/bin/test $(/bin/nisdomainname) = ${domain}",
   }
+
+#  realize Package['libsss_sudo']
+#  realize Service['sssd']
+
+  if $sssd_template and str2bool($::ipa_clientinstall) {
+    Package <| title == 'libsss_sudo' |> -> 
+    File <| title == "sssd.conf-${host}" |> ~> 
+    Exec["setupnisdomain-${host}"] ~>
+    Service['sssd']
+  }  
 
   if $ipa::master::sudo {
     exec { "set-sudopw-${host}":
@@ -59,9 +58,5 @@ define ipa::configsudo (
       logoutput => 'on_failure'
     }
   }
-  Package <| title == 'libsss_sudo' |> ->
-  exec { "setupnisdomain-${host}":
-    command => "/bin/nisdomainname ${domain}",
-    unless  => "/usr/bin/test $(/bin/nisdomainname) = ${domain}",
-  }
+
 }
