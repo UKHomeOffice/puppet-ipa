@@ -67,7 +67,7 @@ define ipa::clientinstall (
     }
   }
 
-  if ! str2bool($::ipa_clientinstall) {
+  if ! $ipa::client::sudo and ! str2bool($::ipa_clientinstall) {
     exec { "client-install-${host}":
       command   => "/bin/echo | rm -f /etc/ipa/ca.crt && ${clientinstallcmd}",
       unless    => shellquote('/bin/bash','-c',"LDAPTLS_REQCERT=never /usr/bin/ldapsearch -LLL -x -H ldaps://${masterfqdn} -D uid=admin,cn=users,cn=accounts,${dc} -b ${dc} -w ${adminpw} fqdn=${host} | /bin/grep ^krbLastPwdChange"),
